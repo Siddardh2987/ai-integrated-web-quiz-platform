@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster Admin</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script> 
+</head>
+<body>
+
+    <div class="admin-container">
+        <nav class="sidebar">
+            <h2>QuizMaster <span>Admin</span></h2>
+            <ul>
+                <li data-view="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</li>
+                <li class="active" data-view="create"><i data-lucide="plus-circle"></i> Create Quiz</li>
+                <li data-view="profile"><i data-lucide="user"></i> Profile</li>
+                <li data-view="past"><i data-lucide="history"></i> Past Quizzes</li>
+                <li class="logout"><i data-lucide="log-out"></i> Logout</li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <section id="dashboard-view" class="view-section" style="display:none;">
+                <h1>Dashboard</h1>
+
+                <div class="quiz-form-card">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Quizzes</h3>
+                            <p id="total-quizzes">12</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3>Active Quizzes</h3>
+                            <p id="active-quizzes">3</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3>Students Participated</h3>
+                            <p>245</p>
+                        </div>
+
+                        <div class="stat-card">
+                            <h3>Drafts</h3>
+                            <p id="draft-count">4</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-form-card">
+                    <h2>Upcoming Quizzes</h2>
+                    <table class="quiz-table">
+                        <thead>
+                            <tr>
+                                <th>Quiz</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Students</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>JavaScript Basics</td>
+                                <td>2025-01-10</td>
+                                <td><span class="status-pill">Scheduled</span></td>
+                                <td>60+</td>
+                            </tr>
+
+                            <tr>
+                                <td>Physics - Waves</td>
+                                <td>2025-01-14</td>
+                                <td><span class="status-pill">Scheduled</span></td>
+                                <td>42+</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="create-view" class="view-section">
+                <header>
+                    <div class="header-title">
+                        <h1>Create New Quiz</h1>
+                        <p class="subtitle">Welcome back, Professor Smith</p>
+                    </div>
+                    <button class="btn-ai" id="generate-ai">
+                        <i data-lucide="sparkles"></i> Generate with AI
+                    </button>
+                </header>
+
+                <div class="quiz-form-card">
+                    <div class="form-group">
+                        <label>Quiz Title</label>
+                        <input type="text" id="quiz-title" placeholder="e.g. Organic Chemistry Basics">
+                    </div>
+                    <div class="form-group">
+                        <label>Topic</label>
+                        <input type="text" id="quiz-topic" placeholder="e.g. Algebra / Photosynthesis">
+                    </div>
+                    <div class="form-group">
+                        <label>Topic Description</label>
+                        <textarea id="quiz-description" placeholder="Enter short description about quiz..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Difficulty</label>
+                        <select id="quiz-difficulty">
+                            <option value="">Select Difficulty</option>
+                            <option>Easy</option>
+                            <option>Medium</option>
+                            <option>Hard</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Estimated Time (Minutes)</label>
+                            <input type="number" placeholder="45">
+                        </div>
+                        <div class="form-group">
+                            <label>Start date and time</label>
+                            <input type="datetime-local">
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+                    <h3>Questions</h3>
+                    <div id="questions-container">
+                        <div class="question-block">
+                            <div class="q-header">
+                                <span>Question 1</span>
+                                <select>
+                                    <option>MCQ (Single Correct)</option>
+                                    <option>True/False</option>
+                                </select>
+                            </div>
+                            <textarea placeholder="Enter your question here..."></textarea>
+                            <div class="options-grid">
+                                <div class="opt-input"><input type="radio" name="q1"><input type="text" placeholder="Option A"></div>
+                                <div class="opt-input"><input type="radio" name="q1"><input type="text" placeholder="Option B"></div>
+                                <div class="opt-input"><input type="radio" name="q1"><input type="text" placeholder="Option C"></div>
+                                <div class="opt-input"><input type="radio" name="q1"><input type="text" placeholder="Option D"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-secondary" id="add-question">
+                            <i data-lucide="plus"></i> Add Question
+                        </button>
+                        <button type="submit" class="btn-primary" id="publish-quiz">
+                            <i data-lucide="send"></i> Publish Quiz
+                        </button>
+                        <button type="button" class="btn-secondary" id="save-draft">
+                            <i data-lucide="save"></i> Save as Draft
+                        </button>
+                    </div>
+
+            </section>
+
+            <section id="past-view" class="view-section" style="display:none;">
+                <h1>Past Quizzes</h1>
+                <div class="quiz-form-card">
+                    <table class="quiz-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Submissions</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Basics of UI/UX</td>
+                                <td>2025-12-01</td>
+                                <td>45 Students</td>
+                                <td><span class="status-pill closed">Closed</span></td>
+                                <td><button class="btn-icon"><i data-lucide="eye"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
