@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attempt Quiz - Quiz Craft</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6fb;
+        }
+
+        /* HEADER */
+        .header {
+            background: #111827;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .timer {
+            font-weight: 500;
+        }
+
+        /* CONTENT */
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        /* QUESTION */
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question h4 {
+            margin-bottom: 10px;
+        }
+
+        /* OPTIONS */
+        .options label {
+            display: block;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .options label:hover {
+            background: #f1f5ff;
+            border-color: #2563eb;
+        }
+
+        .options input {
+            margin-right: 10px;
+        }
+
+        /* SUBMIT SECTION */
+        .submit-section {
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        .submit-btn {
+            padding: 12px 40px;
+            font-size: 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #1e40af;
+        }
+
+        /* MESSAGE AREA */
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            display: none; /* Hidden by default */
+        }
+
+        .error-msg {
+            display: block;
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        /* DASHBOARD LINK ON SUCCESS */
+        .dash-link {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 10px 20px;
+            background: #111827;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Online Examination</h2>
+    <div class="timer" id="timer">Time Left: 15:00</div>
+</div>
+
+<div class="container" id="quizContainer"></div>
+
+<div class="submit-section">
+    <div class="message" id="message"></div>
+    <button class="submit-btn" onclick="submitQuiz()">Submit Quiz</button>
+</div>
+
+<script>
+const quizData = [
+    { q: "HTML stands for?", opts: ["Hyper Text Markup Language","High Text Machine Language","Hyper Tool Markup Language","None"], ans: 0 },
+    { q: "Which tag is used for paragraph?", opts: ["<div>","<p>","<h1>","<span>"], ans: 1 },
+    { q: "Which CSS property controls layout?", opts: ["color","display","font-size","border"], ans: 1 },
+    { q: "JavaScript is a ____ language.", opts: ["Styling","Markup","Programming","Database"], ans: 2 },
+    { q: "Which symbol is used for comments in JS?", opts: ["","//","**","##"], ans: 1 },
+    { q: "Which HTML attribute is used for links?", opts: ["src","href","link","url"], ans: 1 },
+    { q: "Which CSS unit is relative?", opts: ["px","cm","em","mm"], ans: 2 },
+    { q: "DOM stands for?", opts: ["Data Object Model","Document Object Model","Digital Object Management","None"], ans: 1 },
+    { q: "Which method prints output in JS?", opts: ["print()","echo()","console.log()","write()"], ans: 2 },
+    { q: "Which tag is used to include JS?", opts: ["<js>","<script>","<link>","<style>"], ans: 1 }
+];
+
+let time = 900; 
+const quizContainer = document.getElementById("quizContainer");
+const timerEl = document.getElementById("timer");
+const messageEl = document.getElementById("message");
+
+/* LOAD QUESTIONS */
+quizData.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `
+        <h4>Q${index + 1}. ${item.q}</h4>
+        <div class="options">
+            ${item.opts.map((opt, i) => `
+                <label>
+                    <input type="radio" name="q${index}" value="${i}">
+                    ${opt}
+                </label>
+            `).join("")}
+        </div>
+    `;
+    quizContainer.appendChild(div);
+});
+
+/* TIMER */
+const timer = setInterval(() => {
+    time--;
+    const min = Math.floor(time / 60);
+    const sec = time % 60;
+    timerEl.textContent = `Time Left: ${min}:${sec.toString().padStart(2, '0')}`;
+
+    if(time <= 0){
+        clearInterval(timer);
+        forceSubmit();
+    }
+}, 1000);
+
+/* SMOOTH SCROLL JUMP & SUBMISSION */
+function submitQuiz(){
+    let unanswered = [];
+
+    quizData.forEach((_, index) => {
+        if(!document.querySelector(`input[name="q${index}"]:checked`)){
+            unanswered.push(index + 1);
+        }
+    });
+
+    if(unanswered.length > 0){
+        // 1. Show message and style it
+        messageEl.textContent = "⚠️ Please answer all questions before submitting.";
+        messageEl.className = "message error-msg";
+        
+        // 2. SMOOTH JUMP TO MESSAGE
+        messageEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    forceSubmit();
+}
+
+function forceSubmit() {
+    clearInterval(timer);
+    
+    // 3. COMPLETE SUCCESS VIEW WITH DASHBOARD LINK
+    document.body.innerHTML = `
+    <div style="height: 100vh; display: flex; justify-content: center; align-items: center; background: #f4f6fb;">
+        <div style="background: white; padding: 50px 60px; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); text-align: center;">
+            <h1 style="color: #059669;">✅ Submission Successful</h1>
+            <p style="color: #4b5563; font-size: 18px;">Your response has been successfully recorded.</p>
+            <a href="ind.html" class="dash-link">Back to Dashboard</a>
+        </div>
+    </div>
+    `;
+}
+</script>
+
+</body>
+</html>

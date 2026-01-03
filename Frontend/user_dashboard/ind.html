@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Quiz Craft</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+   
+</head>
+<body>
 
+    <div class="sidebar">
+        <div class="logo">Quiz Craft</div>
+        <ul class="sidebar-menu">
+            <li id="m-dash" class="active" onclick="showView('dashboard')"><i class="fas fa-home"></i> Dashboard</li>
+            <li id="m-enrolled" onclick="showView('enrolled')"><i class="fas fa-tasks"></i> Enrolled Quizzes</li>
+            <li id="m-enroll" onclick="showView('enroll')"><i class="fas fa-search"></i> Enroll Quiz</li>
+            <li id="m-profile" onclick="showView('profile')"><i class="fas fa-user-circle"></i> Profile</li>
+            <li id="m-past" onclick="showView('past')"><i class="fas fa-history"></i> Past Quizzes</li>
+            <li class="logout"><i class="fas fa-sign-out-alt"></i> Logout</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="dashboardView">
+            <div class="greeting"><h1>Upcoming Quizzes 👋</h1><p>Register for upcoming quizzes here.</p></div>
+            <div class="quiz-grid">
+                <div class="quiz-card">
+                    <span class="status-badge">Available</span>
+                    <h3>Machine Learning Basics</h3>
+                    <div class="quiz-details"><p><i class="far fa-clock"></i> 30 Mins</p></div>
+                </div>
+                <div class="quiz-card">
+                    <span class="status-badge">Available</span>
+                    <h3>Database Management</h3>
+                    <div class="quiz-details"><p><i class="far fa-clock"></i> 45 Mins</p></div>
+                </div>
+                <div class="quiz-card">
+                    <span class="status-badge">Available</span>
+                    <h3>UI/UX Design Principles</h3>
+                    <div class="quiz-details"><p><i class="far fa-clock"></i> 20 Mins</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="enrolledQuizzesSection">
+            <div class="greeting"><h1>Enrolled Quizzes</h1><p>Quizzes you have enrolled in and are ready to take.</p></div>
+            <div class="quiz-grid">
+                <div class="quiz-card">
+                    <span class="status-badge" style="background:#e8f0fe; color:var(--primary-blue)">Enrolled</span>
+                    <h3>Machine Learning Basics</h3>
+                    <div class="quiz-details"><p><i class="far fa-clock"></i> 30 Mins</p></div>
+                    <button class="btn-blue" style="margin-top:15px" onclick="window.location.href='attempt_quiz.html'">Start Quiz</button>
+                </div>
+                <div class="quiz-card">
+                    <span class="status-badge" style="background:#e8f0fe; color:var(--primary-blue)">Enrolled</span>
+                    <h3>UI/UX Design Principles</h3>
+                    <div class="quiz-details"><p><i class="far fa-clock"></i> 20 Mins</p></div>
+                    <button class="btn-blue" style="margin-top:15px" onclick="window.location.href='attempt_quiz.html'">Start Quiz</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="enrollSection">
+            <div class="greeting"><h1>Enroll Quiz</h1></div>
+            <div class="form-box">
+                <div id="enrollInputs">
+                    <input type="text" id="enrollKey" class="input-field" placeholder="Enter Key (e.g. AI-99)">
+                    <button onclick="validateKey()" class="btn-blue" style="margin-top:15px">Enroll</button>
+                </div>
+                <div id="enrollmentStatus" style="display:none; margin-top:20px; text-align: center;">
+                    <h3 id="statusTitle" style="margin-bottom: 10px;"></h3>
+                    <p id="statusSub" style="color: var(--text-muted); font-size: 14px;"></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="profileSection">
+            <div class="greeting"><h1>My Profile</h1><p>Manage your account settings and social profiles.</p></div>
+            <div class="form-box">
+                <div class="input-group"><label>Full Name</label><input type="text" class="input-field" placeholder="Enter your full name"></div>
+                <div class="input-group"><label>Email Address</label><input type="email" class="input-field" placeholder="email@example.com"></div>
+                <div class="input-group"><label>Phone Number</label><input type="tel" class="input-field" placeholder="+91 00000 00000"></div>
+                <div class="input-group"><label>LinkedIn Profile URL</label><div class="input-with-icon"><i class="fab fa-linkedin"></i><input type="url" class="input-field" placeholder="https://linkedin.com/in/username"></div></div>
+                <div class="input-group"><label>GitHub Profile URL</label><div class="input-with-icon"><i class="fab fa-github"></i><input type="url" class="input-field" placeholder="https://github.com/username"></div></div>
+                <div class="input-group"><label>Profession</label><input type="text" class="input-field" placeholder="Enter your Profession"></div>
+                <button class="btn-blue" onclick="saveProfile()" style="margin-top: 10px;">Update Profile</button>
+            </div>
+        </div>
+
+        <div id="pastQuizzesSection">
+            <div class="greeting"><h1>Past Quizzes</h1><p>Review your submitted responses and performance.</p></div>
+            <div class="quiz-grid">
+                <div class="quiz-card">
+                    <span class="status-badge" style="background:#e8f0fe; color:var(--primary-blue)">Submitted</span>
+                    <h3>Python Fundamentals</h3>
+                    <div class="quiz-details"><p><i class="fas fa-check-circle"></i> Score: 8/10</p></div>
+                    <button class="btn-blue" style="background:#334155; margin-top:15px" onclick="fetchResultData('python')">View Response</button>
+                </div>
+                <div class="quiz-card">
+                    <span class="status-badge" style="background:#e8f0fe; color:var(--primary-blue)">Submitted</span>
+                    <h3>Cyber Security Intro</h3>
+                    <div class="quiz-details"><p><i class="fas fa-check-circle"></i> Score: 5/10</p></div>
+                    <button class="btn-blue" style="background:#334155; margin-top:15px" onclick="fetchResultData('cyber')">View Response</button>
+                </div>
+                <div class="quiz-card">
+                    <span class="status-badge" style="background:#e8f0fe; color:var(--primary-blue)">Submitted</span>
+                    <h3>Cloud Essentials</h3>
+                    <div class="quiz-details"><p><i class="fas fa-check-circle"></i> Score: 9/10</p></div>
+                    <button class="btn-blue" style="background:#334155; margin-top:15px" onclick="fetchResultData('cloud')">View Response</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultView">
+            <div class="result-container">
+                <button onclick="showView('past')" style="border:none; background:none; color:var(--primary-blue); cursor:pointer; font-weight:bold; margin-bottom:20px;"><i class="fas fa-arrow-left"></i> Back to History</button>
+                <h1 id="resTitle">Quiz Result</h1>
+                <p id="resTopic">Topic: General</p>
+                <div class="stats-grid">
+                    <div class="stat-box"><h2 id="resScore">0/0</h2><p>Score</p></div>
+                    <div class="stat-box"><h2>Completed</h2><p>Status</p></div>
+                    <div class="stat-box"><h2 id="resAccuracy">0%</h2><p>Accuracy</p></div>
+                    <div class="stat-box"><h2 id="resPoints">0</h2><p>Total Points</p></div>
+                </div>
+                <div id="answersContainer"></div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
